@@ -1,0 +1,110 @@
+vagrant-edison-yocto-kernel-builder
+===
+
+## Sumary
+
+This vagrant stuff helps you to build kernel modules (.ko files) running on the intel's iotdk complete image (poky-edison). You can copy them into your edison without replacing entire image.
+
+## Prerequisites
+
+1. Vagrant 1.7.4+
+1. VirtualBox 5+
+1. 4GiB RAM and 2 CPU cores for a vagrant box ... You can modify it in Vagrantfile
+1. High-speed Internet connection
+
+### VM memory and CPU allocation
+
+Modify `vb.memory` for RAM size and `vb.cpus` for core size in `Vagrantfile`.
+
+```ruby
+  config.vm.provider "virtualbox" do |vb|
+    # Display the VirtualBox GUI when booting the machine
+    # vb.gui = true
+
+    # Customize the amount of memory on the VM:
+    vb.memory = "4096"
+    # Customize the cpu size on the VM:
+    vb.cpus = 2
+  end
+```
+
+## How to use
+
+Clone the project and launch it with Vagrant.
+```bash
+(host)   $git clone https://github.com/dbaba/vagrant-edison-yocto-kernel-builder.git
+(host)   $cd vagrant-edison-yocto-kernel-builder
+(host)   $vagrant up
+```
+
+SSH to the vagrant box and configure the kernel config as you like.
+```bash
+(host)   $ vagrant ssh
+(vagrant)$ ./config_set.sh CONFIG_USB_NET_CDCETHER m
+```
+
+The output is, in this case, as follows:
+```bash
+~/edison/edison-src/meta-intel-edison/meta-intel-edison-bsp/recipes-kernel/linux/files ~
+==== BEFORE ===
+[defconfig]
+1207:# CONFIG_USB_NET_CDCETHER is not set
+==== AFTER ===
+[defconfig]
+1207:CONFIG_USB_NET_CDCETHER=m
+```
+
+Now time to build. Run the following command. This will take a couple of hours or more depending on your network bandwidth and allocated hardware resources.
+
+It took 2 hours and 10 minutes for the first build with 2.8 GHz Intel Core i7 and 16GiB RAM (4GiB RAM and 2 cpus were allocated for VM). The second build after adding 3 modules was finished around 15 munites though.
+
+```bash
+(vagrant)$ source ./build.sh
+```
+
+The shell script takes you to `/mnt/edison` where the rootfs is exapanded.
+
+The command output looks like as follows.
+
+```bash
+~/edison/edison-src ~
+
+### Shell environment set up for builds. ###
+
+You can now run 'bitbake <target>'
+
+Common targets are:
+    core-image-minimal
+    core-image-sato
+    meta-toolchain
+    adt-installer
+    meta-ide-support
+
+You can also run generated qemu images with a command like 'runqemu qemux86'
+Start building at Wed Oct 28 14:16:04 UTC 2015
+
+(snip)
+
+Terminated building at Wed Oct 28 17:00:33 UTC 2015
+~
+Done. You're now able to explore the rootfs from here! => /mnt/edison
+Copy files to /vagrant, and you can get them from the host machine without SCP.
+```
+
+Then try to find a kernel module file, `cdc_ether.ko` for instance.
+
+```bash
+(vagrant)$ sudo find -name "cdc_ether.ko"
+./lib/modules/3.10.17-poky-edison+/kernel/drivers/net/usb/cdc_ether.ko
+```
+
+See [HOWTO: make your driver load automatically at poky boot](https://communities.intel.com/message/289417#289417) for installing the kernel files.
+
+### Where are bitbake building files?
+
+You can find the rootfs and other files in `${HOME}/edison/edison-src/out/linux64/build/tmp/deploy/images/edison/`.
+
+## Helpful Resources
+
+- [HOWTO: make your driver load automatically at poky boot](https://communities.intel.com/message/289417#289417)
+- [Version Magic Error](https://github.com/LGSInnovations/Edison-Ethernet/blob/master/guides/version-magic-error.md)

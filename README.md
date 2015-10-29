@@ -1,8 +1,6 @@
 vagrant-edison-yocto-kernel-builder
 ===
 
-## Sumary
-
 This vagrant stuff helps you to build kernel modules (.ko files) running on the intel's iotdk complete image (poky-edison). You can copy them into your edison without replacing entire image.
 
 ## Prerequisites
@@ -11,6 +9,10 @@ This vagrant stuff helps you to build kernel modules (.ko files) running on the 
 1. VirtualBox 5+
 1. 4GiB RAM and 2 CPU cores for a vagrant box ... You can modify it in Vagrantfile
 1. High-speed Internet connection
+
+## Ttested Edison Image Version
+
+[Release 2.1](https://software.intel.com/en-us/iot/hardware/edison/downloads)(poky-edison)
 
 ### VM memory and CPU allocation
 
@@ -32,19 +34,27 @@ Modify `vb.memory` for RAM size and `vb.cpus` for core size in `Vagrantfile`.
 
 Clone the project and launch it with Vagrant.
 ```bash
-(host)   $git clone https://github.com/dbaba/vagrant-edison-yocto-kernel-builder.git
-(host)   $cd vagrant-edison-yocto-kernel-builder
-(host)   $vagrant up
+(host)   $ git clone https://github.com/dbaba/vagrant-edison-yocto-kernel-builder.git
+(host)   $ cd vagrant-edison-yocto-kernel-builder
+(host)   $ vagrant up
 ```
 
-SSH to the vagrant box and configure the kernel config as you like.
+SSH to the vagrant box.
 ```bash
 (host)   $ vagrant ssh
-(vagrant)$ ./config_set.sh CONFIG_USB_NET_CDCETHER m
 ```
 
-The output is, in this case, as follows:
+You can list the config values by running the command.
 ```bash
+(vagrant)$ ./config_get.sh CONFIG_USB_NET_CDCETHER
+~/edison/edison-src/meta-intel-edison/meta-intel-edison-bsp/recipes-kernel/linux/files ~
+[defconfig]
+1207:CONFIG_USB_NET_CDCETHER=m
+```
+
+You can configure the kernel config as you like.
+```bash
+(vagrant)$ ./config_set.sh CONFIG_USB_NET_CDCETHER m
 ~/edison/edison-src/meta-intel-edison/meta-intel-edison-bsp/recipes-kernel/linux/files ~
 ==== BEFORE ===
 [defconfig]
@@ -54,13 +64,24 @@ The output is, in this case, as follows:
 1207:CONFIG_USB_NET_CDCETHER=m
 ```
 
-Now time to build. Run the following command. This will take a couple of hours or more depending on your network bandwidth and allocated hardware resources.
+You can reset the kernel config modifications by the following command.
+```bash
+(vagrant)$ ./config_rset.sh
+~/edison/edison-src/meta-intel-edison/meta-intel-edison-bsp/recipes-kernel/linux/files ~
+Resetting configuration
+[defconfig]
+Done
+```
 
-It took 2 hours and 10 minutes for the first build with 2.8 GHz Intel Core i7 and 16GiB RAM (4GiB RAM and 2 cpus were allocated for VM). The second build after adding 3 modules was finished around 15 munites though.
+Now time to build. Run the following command.
 
 ```bash
 (vagrant)$ source ./build.sh
 ```
+
+This will take a couple of hours or more depending on your network bandwidth and allocated hardware resources.
+
+It took 2 hours and 10 minutes for the first build with 2.8 GHz Intel Core i7 and 16GiB RAM (4GiB RAM and 2 cpus were allocated for VM). The second build after adding 3 modules was finished around 15 munites though.
 
 The shell script takes you to `/mnt/edison` where the rootfs is exapanded.
 
@@ -104,7 +125,16 @@ See [HOWTO: make your driver load automatically at poky boot](https://communitie
 
 You can find the rootfs and other files in `${HOME}/edison/edison-src/out/linux64/build/tmp/deploy/images/edison/`.
 
+### How to use the previous release source code?
+
+Edit `setup.sh` and modify `SOURCE_URL`, then `vagrant destroy -f; vagrant up`.
+
 ## Helpful Resources
 
 - [HOWTO: make your driver load automatically at poky boot](https://communities.intel.com/message/289417#289417)
 - [Version Magic Error](https://github.com/LGSInnovations/Edison-Ethernet/blob/master/guides/version-magic-error.md)
+
+## Revision History
+
+* 1.0.0
+  - Initial Release

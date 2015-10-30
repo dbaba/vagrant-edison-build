@@ -1,4 +1,4 @@
-vagrant-edison-yocto-kernel-builder
+vagrant-edison-build
 ===
 
 This vagrant stuff helps you to build kernel modules (.ko files) running on the intel's iotdk complete image (poky-edison). You can copy them into your edison without replacing entire image.
@@ -34,8 +34,8 @@ Modify `vb.memory` for RAM size and `vb.cpus` for core size in `Vagrantfile`.
 
 Clone the project and launch it with Vagrant.
 ```bash
-(host)   $ git clone https://github.com/dbaba/vagrant-edison-yocto-kernel-builder.git
-(host)   $ cd vagrant-edison-yocto-kernel-builder
+(host)   $ git clone https://github.com/dbaba/vagrant-edison-build.git
+(host)   $ cd vagrant-edison-build
 (host)   $ vagrant up
 ```
 
@@ -136,5 +136,7 @@ Edit `setup.sh` and modify `SOURCE_URL`, then `vagrant destroy -f; vagrant up`.
 
 ## Revision History
 
+* 1.0.1
+  - renamed
 * 1.0.0
   - Initial Release

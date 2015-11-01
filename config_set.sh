@@ -15,7 +15,7 @@ if [ -z "${CONFIG}" ] || [ -z "${OPTS}" ]; then
   echo "./config_set.sh <CONFIG> [y|m|u]"
   echo "  => y for yes, m for module and u for unset"
   echo "Set the config name and option"
-  echo -en "\e[0m"
+  echo -en "\033[0m"
   exit 1
 fi
 
@@ -48,7 +48,7 @@ elif [ "$OPTS" == "u" ]; then
     grep -l "${CONFIG}=m" ${f} | xargs sed -i "s/${CONFIG}=m/# ${CONFIG} is not set/g" >/dev/null 2>&1
   done
 else
-  echo -e "\033[91mAbort! Unknon option => [${OPTS}]\e[0m"
+  echo -e "\033[91mAbort! Unknon option => [${OPTS}]\033[0m"
   exit 2
 fi
 
@@ -58,4 +58,4 @@ do
   echo "[${f}]"
   grep -n "${CONFIG}" ${f}
 done
-echo -en "\e[0m"
+echo -en "\033[0m"

@@ -10,7 +10,7 @@ CONFIG_FILES="defconfig"
 CONFIG="$1"
 
 if [ -z ${CONFIG} ];then
-  echo -e "\033[91mSet the config name\e[0m"
+  echo -e "\033[91mSet the config name\033[0m"
   exit 1
 fi
 
@@ -20,4 +20,4 @@ do
   echo "[${f}]"
   grep -n "${CONFIG}" ${f}
 done
-echo -en "\e[0m"
+echo -en "\033[0m"

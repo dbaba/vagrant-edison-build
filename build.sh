@@ -10,15 +10,15 @@ cd ./out/linux64
 source poky/oe-init-build-env
 # moved to ./build implicitly
 touch conf/sanity.conf
-echo -e "\033[92mStart building at $(date)\e[0m"
+echo -e "\033[92mStart building at $(date)\033[0m"
 time bitbake edison-image
-echo -e "\033[92mTerminated building at $(date)\e[0m"
+echo -e "\033[92mTerminated building at $(date)\033[0m"
 popd
 
 ROOTFS=`ls ./tmp/deploy/images/edison/edison-image-edison.ext4`
 RET=$?
 if [ "${RET}" != "0" ]; then
-  echo -e "\033[91mThe rootfs is missing. You should have build errors.\e[0m"
+  echo -e "\033[91mThe rootfs is missing. You should have build errors.\033[0m"
   exit 1
 fi
 
@@ -33,4 +33,4 @@ cd /mnt/edison/
 echo -en "\033[93m"
 echo "Done. You're now able to explore the rootfs from here! => $(pwd)"
 echo "Copy files to /vagrant, and you can get them from the host machine without SCP."
-echo -en "\e[0m"
+echo -en "\033[0m"

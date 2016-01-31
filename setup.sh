@@ -3,6 +3,8 @@
 # Provisioning Script for Vagrant box
 # This scirpt is expected to be run as root
 
+DEST=/home/vagrant
+
 SOURCE_URL=http://downloadmirror.intel.com/25028/eng/edison-src-ww25.5-15.tgz
 LINUX_VERSION_EXTENSION=-poky-edison+
 DNS="8.8.8.8"
@@ -26,8 +28,8 @@ cd edison-src
 echo -e "LINUX_VERSION_EXTENSION = \"${LINUX_VERSION_EXTENSION}\"" \
   >> meta-intel-edison/meta-intel-edison-bsp/recipes-kernel/linux/linux-yocto_3.10.bbappend
 
-mv /edison/ /home/vagrant/
-cd /home/vagrant/edison/edison-src
+mv /edison/ ${DEST}/
+cd ${DEST}/edison/edison-src
 mkdir bitbake_download_dir bitbake_sstate_dir
 ./meta-intel-edison/setup.sh --dl_dir=./bitbake_download_dir --sstate_dir=./bitbake_sstate_dir
 

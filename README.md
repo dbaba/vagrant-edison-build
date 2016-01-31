@@ -81,9 +81,9 @@ Now time to build. Run the following command.
 
 This will take a couple of hours or more depending on your network bandwidth and allocated hardware resources.
 
-It took 2 hours and 10 minutes for the first build with 2.8 GHz Intel Core i7 and 16GiB RAM (4GiB RAM and 2 cpus were allocated for VM). The second build after adding 3 modules was finished around 15 munites though.
+It took 2 hours and 10 minutes for the first build with 2.8 GHz Intel Core i7 and 16GiB RAM (4GiB RAM and 2 cpus were allocated for VM). The second build after adding 3 modules was finished around 15 minutes though.
 
-The shell script takes you to `/mnt/edison` where the rootfs is exapanded.
+The shell script takes you to `/mnt/edison` where the rootfs is expanded.
 
 The command output looks like as follows.
 

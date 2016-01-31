@@ -5,7 +5,7 @@
 SCRIPT_BASE=$(dirname $(readlink -f -- "$0"))
 EDISON_SRC=${SCRIPT_BASE}/edison/edison-src
 
-pushd ${EDISON_SRC}
+cd ${EDISON_SRC}
 cd ./out/linux64
 source poky/oe-init-build-env
 # moved to ./build implicitly
@@ -13,7 +13,6 @@ touch conf/sanity.conf
 echo -e "\033[92mStart building at $(date)\033[0m"
 time bitbake edison-image
 echo -e "\033[92mTerminated building at $(date)\033[0m"
-popd
 
 ROOTFS=`ls ./tmp/deploy/images/edison/edison-image-edison.ext4`
 RET=$?

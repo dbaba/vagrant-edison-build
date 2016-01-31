@@ -31,9 +31,9 @@ cd /home/vagrant/edison/edison-src
 mkdir bitbake_download_dir bitbake_sstate_dir
 ./meta-intel-edison/setup.sh --dl_dir=./bitbake_download_dir --sstate_dir=./bitbake_sstate_dir
 
-cp /vagrant/build.sh /home/vagrant/
-cp /vagrant/config_get.sh /home/vagrant/
-cp /vagrant/config_set.sh /home/vagrant/
-cp /vagrant/fetch_cmd /home/vagrant/
+cp -f /vagrant/build.sh /home/vagrant/
+cp -f /vagrant/config_get.sh /home/vagrant/
+cp -f /vagrant/config_set.sh /home/vagrant/
+cp -f /vagrant/fetch_cmd /home/vagrant/
 
 chown -R vagrant:vagrant /home/vagrant/

@@ -5,7 +5,7 @@ This vagrant stuff helps you to build kernel modules (.ko files) running on the 
 
 ## Prerequisites
 
-1. Vagrant 1.7.4+
+1. Vagrant 1.8.1+
 1. VirtualBox 5+
 1. 4GiB RAM and 2 CPU cores for a vagrant box ... You can modify it in Vagrantfile
 1. High-speed Internet connection

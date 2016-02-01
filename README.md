@@ -112,7 +112,7 @@ Done. You're now able to explore the rootfs from here! => /mnt/edison
 Copy files to /vagrant, and you can get them from the host machine without SCP.
 ```
 
-Then try to find a kernel module file, `cdc_ether.ko` for instance.
+Then try to find a kernel module file on the directory, `cdc_ether.ko` for instance.
 
 ```bash
 (vagrant)$ sudo find -name "cdc_ether.ko"
@@ -121,7 +121,7 @@ Then try to find a kernel module file, `cdc_ether.ko` for instance.
 
 See [HOWTO: make your driver load automatically at poky boot](https://communities.intel.com/message/289417#289417) for installing the kernel files.
 
-### Where are bitbake building files?
+### Where are `bitbake` building files?
 
 You can find the rootfs and other files in `${HOME}/edison/edison-src/out/linux64/build/tmp/deploy/images/edison/`.
 

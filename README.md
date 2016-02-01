@@ -1,7 +1,10 @@
 vagrant-edison-build
 ===
 
-This vagrant stuff helps you to build kernel modules (.ko files) running on the intel's iotdk complete image (poky-edison). You can copy them into your edison without replacing entire image.
+This vagrant stuff helps you to
+
+1. build kernel modules (.ko files) running on the intel's iotdk complete image (poky-edison) so that you can copy them into your edison without replacing entire image
+1. create an image file and mount it on the guest filesystem so that you can place arbitrary files inside the image
 
 ## Prerequisites
 
@@ -30,7 +33,41 @@ Modify `vb.memory` for RAM size and `vb.cpus` for core size in `Vagrantfile`.
   end
 ```
 
-## How to use
+## How to build kernel module
+
+Clone the project and launch it with Vagrant.
+```bash
+(host)   $ git clone https://github.com/dbaba/vagrant-edison-build.git
+(host)   $ cd vagrant-edison-build
+(host)   $ vagrant up
+```
+
+SSH to the vagrant box.
+```bash
+(host)   $ vagrant ssh
+```
+Now you're ready to build a module.
+```bash
+(vagrant)$ cd ${HOME}/edison/edison-src/out/linux64
+(vagrant)$ source poky/oe-init-build-env
+(vagrant)$ time bitbake my-hello-mod
+```
+
+`time` is not mandatory, just show the elapsed time to create a module.
+The first build will take a long time (approx. 1 hour) because of building the underlying dependencies.
+
+Finally, you can get your own `ko` file at `./tmp/sysroots/edison/lib/modules/3.10.17-poky-edison+/extra/`.
+
+### Tips
+
+The module name must NOT contain characters other than `[a-z0-9.+-]`.
+Otherwise, you'll get the following error:
+
+```
+*** Error: Package name  contains illegal characters, (other than [a-z0-9.+-])
+```
+
+## How to build image
 
 Clone the project and launch it with Vagrant.
 ```bash
@@ -129,10 +166,16 @@ You can find the rootfs and other files in `${HOME}/edison/edison-src/out/linux6
 
 Edit `setup.sh` and modify `SOURCE_URL`, then `vagrant destroy -f; vagrant up`.
 
+### Where is the `bitbake` logs?
+
+You can fine the log at `${HOME}/edison/edison-src/out/linux64/build/tmp/log/cooker/edison/yyyyMMddhhmmss.log`, where `yyyyMMddhhmmss` is a timestamp.
+
 ## Helpful Resources
 
 - [HOWTO: make your driver load automatically at poky boot](https://communities.intel.com/message/289417#289417)
 - [Version Magic Error](https://github.com/LGSInnovations/Edison-Ethernet/blob/master/guides/version-magic-error.md)
+- [2.5. Working with Out-of-Tree Modules, Yocto Project Linux Kernel Development Manual Revision 2.0](http://www.yoctoproject.org/docs/current/kernel-dev/kernel-dev.html#working-with-out-of-tree-modules)
+- [Lab 3: Custom Kernel Recipe, Hands-on Kernel Lab](https://www.yoctoproject.org/sites/default/files/kernel-lab-1.4.pdf)
 
 ## `wget` and POODLE issue
 The preinstalled version of `wget` is too old to handle non-SSLv3 connection, e.g. downloading files from download.xdk.intel.com where SSLv3 is disabled for fixing POODLE don't work at all. In fact, I got the following error while building the kernel.
@@ -143,10 +186,16 @@ The preinstalled version of `wget` is too old to handle non-SSLv3 connection, e.
 
 In order to avoid the error, I added a simple wrapper script [`fetch_cmd`](fetch_cmd) using `curl`, as well as `wget`, which is able to handle such the connection, and modify `FETCHCMD_wget` variable in the `bitbake.conf`. The script uses `curl` only when `wget` fails.
 
+## License
+
+* GPLv2 for files under [meta-ext-modules/recipes-ext-modules/my-hello-mod](meta-ext-modules/recipes-ext-modules/my-hello-mod)
+* MIT for all other stuff
+
 ## Revision History
 
 * ?.?.?
   - Fix an issue where `bitbake` failed to download xdk-daemon-0.0.35.tar.bz2 with `wget` command
+  - Add an instruction and template stuff for building custom kernel modules
 * 1.0.1
   - renamed
 * 1.0.0

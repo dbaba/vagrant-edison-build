@@ -32,10 +32,20 @@ mv /edison/ ${DEST}/
 cd ${DEST}/edison/edison-src
 mkdir bitbake_download_dir bitbake_sstate_dir
 ./meta-intel-edison/setup.sh --dl_dir=./bitbake_download_dir --sstate_dir=./bitbake_sstate_dir
+# out dir is created
+
+BBLAYERS_REP="  \\\\"
+BBLAYERS_REP_WITH="  ${DEST}/meta-ext-modules \\\\"
+sed -i -e "s@${BBLAYERS_REP//\//\\/}@${BBLAYERS_REP_WITH//\//\\/}@g" ./out/linux64/build/conf/bblayers.conf >/dev/null
+if [ "$?" != "0" ]; then
+  echo -e "\033[91m./conf/bblayers.conf is missing\033[0m"
+  exit 1
+fi
 
 cp -f /vagrant/build.sh /home/vagrant/
 cp -f /vagrant/config_get.sh /home/vagrant/
 cp -f /vagrant/config_set.sh /home/vagrant/
 cp -f /vagrant/fetch_cmd /home/vagrant/
+cp -fr /vagrant/meta-ext-modules /home/vagrant/
 
 chown -R vagrant:vagrant /home/vagrant/

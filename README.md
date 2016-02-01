@@ -134,8 +134,19 @@ Edit `setup.sh` and modify `SOURCE_URL`, then `vagrant destroy -f; vagrant up`.
 - [HOWTO: make your driver load automatically at poky boot](https://communities.intel.com/message/289417#289417)
 - [Version Magic Error](https://github.com/LGSInnovations/Edison-Ethernet/blob/master/guides/version-magic-error.md)
 
+## `wget` and POODLE issue
+The preinstalled version of `wget` is too old to handle non-SSLv3 connection, e.g. downloading files from download.xdk.intel.com where SSLv3 is disabled for fixing POODLE don't work at all. In fact, I got the following error while building the kernel.
+
+    ERROR: Fetcher failure: Fetch command failed with exit code 4, output:
+    OpenSSL: error:14077410:SSL routines:SSL23_GET_SERVER_HELLO:sslv3 alert handshake failure
+    Unable to establish SSL connection.`
+
+In order to avoid the error, I added a simple wrapper script [`fetch_cmd`](fetch_cmd) using `curl`, as well as `wget`, which is able to handle such the connection, and modify `FETCHCMD_wget` variable in the `bitbake.conf`. The script uses `curl` only when `wget` fails.
+
 ## Revision History
 
+* ?.?.?
+  - Fix an issue where `bitbake` failed to download xdk-daemon-0.0.35.tar.bz2 with `wget` command
 * 1.0.1
   - renamed
 * 1.0.0

@@ -13,13 +13,14 @@ This vagrant stuff helps you to
 1. 4GiB RAM and 2 CPU cores for a vagrant box ... You can modify it in Vagrantfile
 1. High-speed Internet connection
 
-## Ttested Edison Image Version
+## Tested Edison Image Version
 
 [Release 2.1](https://software.intel.com/en-us/iot/hardware/edison/downloads)(poky-edison)
 
 ### VM memory and CPU allocation
 
-Modify `vb.memory` for RAM size and `vb.cpus` for core size in `Vagrantfile`.
+By default, 4GiB memory and 2 cpu cores are allocated.
+You can modify `vb.memory` for RAM size and `vb.cpus` for core size in `Vagrantfile`.
 
 ```ruby
   config.vm.provider "virtualbox" do |vb|
@@ -39,24 +40,52 @@ Clone the project and launch it with Vagrant.
 ```bash
 (host)   $ git clone https://github.com/dbaba/vagrant-edison-build.git
 (host)   $ cd vagrant-edison-build
+```
+Copy or create your kernel modules to `meta-ext-modules`.
+
+The module directory structure looks like:
+```
+  meta-ext-modules
+  `- conf
+  `- your-module-1 ... for .bb/.bbappend files
+  | `- files ... for Makefile and source code
+  `- your-module-2 ... for .bb/.bbappend files
+  :  `- files ... for Makefile and source code
+  :
+```
+Please make sure that your modules include valid `.bb` and/or `.bbappend` files.
+You can look into an example module named `my-hello-mod` as a reference.
+
+After placing your modules, you can start a vagrant box with the following command.
+```bash
 (host)   $ vagrant up
 ```
-
-SSH to the vagrant box.
+`setup.sh` is performed during the provisioning process.
+After the provisioning finishes, you can ssh to the vagrant box.
 ```bash
 (host)   $ vagrant ssh
 ```
-Now you're ready to build a module.
+Now you're ready to build your module.
 ```bash
 (vagrant)$ cd ${HOME}/edison/edison-src/out/linux64
 (vagrant)$ source poky/oe-init-build-env
 (vagrant)$ time bitbake my-hello-mod
 ```
 
-`time` is not mandatory, just show the elapsed time to create a module.
-The first build will take a long time (approx. 1 hour) because of building the underlying dependencies.
+The bitbake target name to build your module is equal to the `.bb` file name without the version and `.bb` extension, i.e. `my-hello-mod` comes from `my-hello-mod_1.0.0.bb`.
 
-Finally, you can get your own `ko` file at `./tmp/sysroots/edison/lib/modules/3.10.17-poky-edison+/extra/`.
+The `time` command prior to `bitbake` is not mandatory, just show the elapsed time to create the module.
+The first build will take a long time (approx. 1 hour) because of building the underlying dependencies as well.
+
+Finally, you can get your own `.ko` file at `./tmp/sysroots/edison/lib/modules/3.10.17-poky-edison+/extra/`.
+
+```bash
+(vagrant)$ ls -la ./tmp/sysroots/edison/lib/modules/3.10.17-poky-edison+/extra/
+total 716
+drwxr-xr-x 2 vagrant vagrant   4096 Feb  4 06:17 .
+drwxr-xr-x 3 vagrant vagrant   4096 Feb  4 06:17 ..
+-rw-r--r-- 3 vagrant vagrant  46006 Feb  4 06:17 my_hello_mod.ko
+```
 
 ### Tips
 
@@ -158,7 +187,7 @@ Then try to find a kernel module file on the directory, `cdc_ether.ko` for insta
 
 See [HOWTO: make your driver load automatically at poky boot](https://communities.intel.com/message/289417#289417) for installing the kernel files.
 
-### Where are `bitbake` building files?
+### Where are `bitbake`d files?
 
 You can find the rootfs and other files in `${HOME}/edison/edison-src/out/linux64/build/tmp/deploy/images/edison/`.
 

@@ -132,7 +132,7 @@ You can configure the kernel config as you like.
 
 You can reset the kernel config modifications by the following command.
 ```bash
-(vagrant)$ ./config_rset.sh
+(vagrant)$ ./config_reset.sh
 ~/edison/edison-src/meta-intel-edison/meta-intel-edison-bsp/recipes-kernel/linux/files ~
 Resetting configuration
 [defconfig]

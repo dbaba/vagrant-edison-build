@@ -45,6 +45,7 @@ fi
 cp -f /vagrant/build.sh /home/vagrant/
 cp -f /vagrant/config_get.sh /home/vagrant/
 cp -f /vagrant/config_set.sh /home/vagrant/
+cp -f /vagrant/config_reset.sh /home/vagrant/
 cp -f /vagrant/fetch_cmd /home/vagrant/
 cp -fr /vagrant/meta-ext-modules /home/vagrant/
 

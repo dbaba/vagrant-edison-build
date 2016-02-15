@@ -34,5 +34,6 @@ mkdir bitbake_download_dir bitbake_sstate_dir
 cp /vagrant/build.sh /home/vagrant/
 cp /vagrant/config_get.sh /home/vagrant/
 cp /vagrant/config_set.sh /home/vagrant/
+cp /vagrant/config_reset.sh /home/vagrant/
 
 chown -R vagrant:vagrant /home/vagrant/

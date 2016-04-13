@@ -216,6 +216,11 @@ The preinstalled version of `wget` is too old to handle non-SSLv3 connection, e.
 
 In order to avoid the error, I added a simple wrapper script [`fetch_cmd`](fetch_cmd) using `curl`, as well as `wget`, which is able to handle such the connection, and modify `FETCHCMD_wget` variable in the `bitbake.conf`. The script uses `curl` only when `wget` fails.
 
+## Distribution Packaging
+
+    tar --exclude=.DS_Store --exclude=vagrant-edison-build.tgz --exclude=.vagrant --exclude=.git -zcf vagrant-edison-build.tgz .
+
+
 ## License
 
 * GPLv2 for files under [meta-ext-modules/recipes-ext-modules/my-hello-mod](meta-ext-modules/recipes-ext-modules/my-hello-mod)

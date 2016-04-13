@@ -15,7 +15,8 @@ This vagrant stuff helps you to
 
 ## Tested Edison Image Version
 
-[Release 2.1](https://software.intel.com/en-us/iot/hardware/edison/downloads)(poky-edison)
+- [Release 3.0](https://software.intel.com/en-us/iot/hardware/edison/downloads)(poky-edison)
+- [Release 2.1](https://software.intel.com/en-us/iot/hardware/edison/downloads)(poky-edison)
 
 ### VM memory and CPU allocation
 

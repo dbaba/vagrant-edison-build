@@ -1,0 +1,79 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import subprocess
+
+# Set False for the default behavior (always using wget)
+ENABLE_CURL = True
+
+"""A fetch command to use cURL rather than GNU wget in order to avoid SSLv3 error
+
+HOW TO INSTALL)
+Replace
+    FETCHCMD_wget = "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
+with
+    FETCHCMD_wget = "/usr/bin/env /home/vagrant/fetch_cmd"
+in the /home/vagrant/edison/edison-src/out/linux64/poky/meta/conf/bitbake.conf file.
+
+TEST1)
+$ rm -fr /tmp/bitbake_download_dir
+$ mkdir -p /tmp/bitbake_download_dir
+$ /usr/bin/env /home/vagrant/fetch_cmd -P /tmp/bitbake_download_dir 'http://download.xdk.intel.com/iot/xdk-daemon-0.0.35.tar.bz2'
+$ ls -la /tmp/bitbake_download_dir/xdk-daemon-0.0.35.tar.bz2
+
+TEST2)
+$ rm -fr /tmp/bitbake_download_dir
+$ /usr/bin/env /home/vagrant/fetch_cmd -c -P /tmp/bitbake_download_dir 'http://download.xdk.intel.com/iot/xdk-daemon-0.0.35.tar.bz2'
+$ ls -la /tmp/bitbake_download_dir/xdk-daemon-0.0.35.tar.bz2
+
+TEST3)
+$ rm -fr /tmp/bitbake_download_dir
+$ mkdir -p /tmp/bitbake_download_dir
+$ /usr/bin/env /home/vagrant/fetch_cmd -P /tmp/bitbake_download_dir 'ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.2.tar.gz'
+$ ls -la /tmp/bitbake_download_dir/libtool-2.4.2.tar.gz
+
+TEST4)
+$ rm -fr /tmp/bitbake_download_dir
+$ /usr/bin/env /home/vagrant/fetch_cmd -c -P /tmp/bitbake_download_dir 'ftp://ftp.gnu.org/gnu/libtool/libtool-2.4.2.tar.gz'
+$ ls -la /tmp/bitbake_download_dir/libtool-2.4.2.tar.gz
+
+"""
+FETCHCMD_curl = "/usr/bin/env curl --fail -s -L -O --insecure"
+FETCHCMD_wget = "/usr/bin/env wget -t 2 -T 30 -nv --passive-ftp --no-check-certificate"
+
+if __name__ == '__main__':
+    args_len = len(sys.argv)
+    if args_len < 4:
+        sys.exit(1)
+    url = ""
+    dest = ""
+    mkdir = False
+    wget_only = True
+    err = 0
+    for arg in sys.argv[1:]:
+        if arg == "-c":
+            mkdir = True
+        elif arg == "-P":
+            dest = ""
+            wget_only = False
+        elif not dest:
+            dest = arg
+        else:
+            url = arg
+
+    if not url:
+        sys.exit(1)
+    if mkdir:
+        if not os.path.exists(dest):
+            os.makedirs(dest)
+    argline = str.join(' ', [arg for arg in sys.argv[1:]])
+    err = 0
+    err_wget = subprocess.call("%s %s" % (FETCHCMD_wget, argline), shell=True)
+    if ENABLE_CURL and err_wget != 0 and not wget_only:
+        err_curl = subprocess.call("cd '%s' && %s '%s'" % (dest, FETCHCMD, url), shell=True)
+        if err_curl != 0:
+            err =  err_wget
+    sys.exit(err)
+
+sys.exit(2)

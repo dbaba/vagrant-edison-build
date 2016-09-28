@@ -17,4 +17,4 @@ do
   fi
 done
 
-echo -e "Done\e[0m"
+echo -e "Done\033[0m"

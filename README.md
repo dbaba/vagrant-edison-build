@@ -227,7 +227,8 @@ In order to avoid the error, I added a simple wrapper script [`fetch_cmd`](fetch
 
 ## Revision History
 
-* ?.?.?
+* 2.0.0
+  - ** NOTICE ** This release only supports Intel® Edison Module Firmware Software Release 2.1
   - Fix an issue where `bitbake` failed to download xdk-daemon-0.0.35.tar.bz2 with `wget` command
   - Add an instruction and template stuff for building custom kernel modules
 * 1.0.1

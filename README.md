@@ -1,6 +1,9 @@
 vagrant-edison-build
 ===
 
+[![GitHub release](https://img.shields.io/github/release/dbaba/vagrant-edison-build.svg)](https://github.com/dbaba/vagrant-edison-build/releases/latest)
+[![License MIT](https://img.shields.io/github/license/dbaba/vagrant-edison-build.svg)](http://opensource.org/licenses/MIT)
+
 This vagrant stuff helps you to
 
 1. build kernel modules (.ko files) running on the intel's iotdk complete image (poky-edison) so that you can copy them into your edison without replacing entire image
